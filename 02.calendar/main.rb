@@ -1,17 +1,19 @@
+#!/usr/bin/env ruby
+
 require 'date'
 require 'optparse'
 
-opt = OptionParser.new
-opt.on('-m') { |v| p v }
-opt.on('-y') { |v| p v }
-opt.parse!(ARGV)
-
 def create_calender
+  params = {}
+  opt = OptionParser.new
+  opt.on('-m VAL') { |v| params[:m] = v }
+  opt.on('-y [VAL]') { |v| params[:y] = v }
+  opt.parse!(ARGV, into: params)
+
   calender = ""
 
-
-  year = Date.today.year
-  month = Date.today.month
+  year = params[:y].nil? ? Date.today.year : params[:y].to_i
+  month = params[:m].nil? ? Date.today.month : params[:m].to_i
 
   calender += "       #{ month.to_s.rjust(2) }月 #{ year }\n"
 
