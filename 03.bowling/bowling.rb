@@ -4,9 +4,7 @@
 require 'optparse'
 require 'debug'
 
-def main
-  scores, frame_count, ball_count, total_score = setup
-
+def main(scores, frame_count, ball_count, total_score)
   scores.each_with_index do |score, index|
     if frame_count == 10
       total_score = calc_last_frame(total_score, scores, index, score)
@@ -23,15 +21,13 @@ def main
     end
     next unless ball_count == 2
 
-    total_score = calc_spare(score, index, total_score, scores) if (score.to_i + scores[index - 1].to_i) == 10
+    total_score = calc_spare(index, total_score, scores) if (score.to_i + scores[index - 1].to_i) == 10
     total_score += score.to_i
     ball_count = 1
     frame_count += 1
   end
-  puts total_score
+  total_score
 end
-
-private
 
 def setup
   opt = OptionParser.new
@@ -43,6 +39,8 @@ def setup
   total_score = 0
   [scores, frame_count, ball_count, total_score]
 end
+
+private
 
 def calc_strike(total_score, frame_count, scores, index)
   total_score += 10
@@ -60,7 +58,7 @@ def calc_strike(total_score, frame_count, scores, index)
   [total_score, frame_count]
 end
 
-def calc_spare(_score, index, total_score, scores)
+def calc_spare(index, total_score, scores)
   total_score += if scores[index + 1] == 'X'
                    10
                  else
@@ -90,4 +88,6 @@ def calc_last_frame(total_score, scores, index, score)
   total_score
 end
 
-main
+scores, frame_count, ball_count, total_score = setup
+total_score = main(scores, frame_count, ball_count, total_score)
+puts total_score
