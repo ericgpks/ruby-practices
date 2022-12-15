@@ -27,15 +27,15 @@ end
 private
 
 def create_body(calender, year, month)
-  cwday = Date.new(year, month, 1).cwday
+  wday = Date.new(year, month, 1).wday
   last_date = Date.new(year, month, -1).day
 
-  (1..last_date).each do |day|
-    if day == 1 && cwday != 7
-      cwday.times do
-        calender += " #{' '.rjust(2)}"
-      end
+  if wday != 0
+    wday.times do
+      calender += " #{' '.rjust(2)}"
     end
+  end
+  (1..last_date).each do |day|
     calender += if Date.new(year, month, day) == Date.today
                   " \e[35m#{day.to_s.rjust(2)}\e[0m"
                 else
