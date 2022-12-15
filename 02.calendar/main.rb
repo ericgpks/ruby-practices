@@ -28,21 +28,20 @@ private
 
 def create_body(calender, year, month)
   wday = Date.new(year, month, 1).wday
-  last_date = Date.new(year, month, -1).day
 
   if wday != 0
     wday.times do
       calender += " #{' '.rjust(2)}"
     end
   end
-  (1..last_date).each do |day|
-    calender += if Date.new(year, month, day) == Date.today
-                  " \e[35m#{day.to_s.rjust(2)}\e[0m"
+  (Date.new(year, month, 1)..Date.new(year, month, -1)).each do |date|
+    calender += if date == Date.today
+                  " \e[35m#{date.day.to_s.rjust(2)}\e[0m"
                 else
-                  " #{day.to_s.rjust(2)}"
+                  " #{date.day.to_s.rjust(2)}"
                 end
 
-    calender += "\n" if Date.new(year, month, day).cwday == 6
+    calender += "\n" if date.saturday?
   end
   calender
 end
