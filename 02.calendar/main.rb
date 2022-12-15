@@ -19,10 +19,7 @@ def create_calender
   calender += "       #{month.to_s.rjust(2)}月 #{year}\n"
 
   days = %w[日 月 火 水 木 金 土]
-  days.each do |day|
-    calender += " #{day}"
-  end
-  calender += "\n"
+  calender += " #{days.join(' ')}\n"
 
   create_body(calender, year, month)
 end
