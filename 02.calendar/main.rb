@@ -21,29 +21,29 @@ def create_calender
   days = %w[日 月 火 水 木 金 土]
   calender += " #{days.join(' ')}\n"
 
-  create_body(calender, year, month)
+  calender += create_body(year, month)
 end
 
 private
 
-def create_body(calender, year, month)
+def create_body(year, month)
+  calender_body = ''
   wday = Date.new(year, month, 1).wday
 
   if wday != 0
     wday.times do
-      calender += " #{' '.rjust(2)}"
+      calender_body += " #{' '.rjust(2)}"
     end
   end
-  (Date.new(year, month, 1)..Date.new(year, month, -1)).each do |date|
-    calender += if date == Date.today
-                  " \e[35m#{date.day.to_s.rjust(2)}\e[0m"
-                else
-                  " #{date.day.to_s.rjust(2)}"
-                end
+  calender_body += (Date.new(year, month, 1)..Date.new(year, month, -1)).map do |date|
+    if date == Date.today
+      " \e[35m#{date.day.to_s.rjust(2)}\e[0m"
+    else
+      " #{date.day.to_s.rjust(2)}"
+    end
 
-    calender += "\n" if date.saturday?
-  end
-  calender
+    "\n" if date.saturday?
+  end.join
 end
 
 puts create_calender
