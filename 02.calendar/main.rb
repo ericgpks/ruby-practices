@@ -28,11 +28,12 @@ private
 
 def create_body(year, month)
   calender_body = ''
-  wday = Date.new(year, month, 1).wday
+  first_date = Date.new(year, month, 1)
+  wday = first_date.wday
 
   calender_body += ('   ' * wday)
 
-  calender_body += (Date.new(year, month, 1)..Date.new(year, month, -1)).map do |date|
+  calender_body += (first_date..Date.new(year, month, -1)).map do |date|
     if date == Date.today
       " \e[35m#{date.day.to_s.rjust(2)}\e[0m"
     else
