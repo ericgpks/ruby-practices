@@ -30,11 +30,10 @@ def create_body(year, month)
   calender_body = ''
   wday = Date.new(year, month, 1).wday
 
-  if wday != 0
-    wday.times do
-      calender_body += " #{' '.rjust(2)}"
-    end
+  wday.times do
+    calender_body += " #{' '.rjust(2)}"
   end
+
   calender_body += (Date.new(year, month, 1)..Date.new(year, month, -1)).map do |date|
     if date == Date.today
       " \e[35m#{date.day.to_s.rjust(2)}\e[0m"
