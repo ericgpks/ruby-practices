@@ -19,7 +19,6 @@ def main(scores, frame_count, ball_count, total_score)
       end
       next
     end
-    next unless ball_count == 2
 
     total_score = calc_spare(total_score, scores, index) if (score.to_i + scores[index - 1].to_i) == 10
     total_score += score.to_i
