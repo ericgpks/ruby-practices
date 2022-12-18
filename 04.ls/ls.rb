@@ -14,28 +14,22 @@ end
 private
 
 def setup
-  files = []
-  files = Dir.glob('*').sort
+  Dir.glob('*').sort
 end
 
 def create_columns(files)
-  file_index = 0
   file_list_table = []
   files_count = files.length
   # 横方向に配置する数
   horizontal_count = HORIZONTAL_COUNT
   # 縦方向に配置する数
-  if files_count <= HORIZONTAL_COUNT
-    vertical_count = files
-  else
-    vertical_count = (files_count / horizontal_count) + 1
-  end
+  vertical_count = files_count <= HORIZONTAL_COUNT ? files : (files_count / horizontal_count) + 1
 
-  horizontal_count.times do |_hi|
-    column = []
-    vertical_count.times do |_vi|
-      column << files[file_index]
-      file_index += 1
+  files.each_slice(vertical_count).to_a.map do |column|
+    unless column.count == HORIZONTAL_COUNT
+      (HORIZONTAL_COUNT - column.count).times do
+        column << nil
+      end
     end
     file_list_table << column
   end
