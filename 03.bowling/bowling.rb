@@ -43,48 +43,24 @@ end
 private
 
 def calc_last_frame(total_score, scores, score, index)
-  total_score += if score == 'X'
-                   10
-                 else
-                   score.to_i
-                 end
-  total_score += if scores[index + 1] == 'X'
-                   10
-                 else
-                   scores[index + 1].to_i
-                 end
+  total_score += score == 'X' ? 10 : score.to_i
+  total_score += scores[index + 1] == 'X' ? 10 : scores[index + 1].to_i
   unless scores[index + 2].nil?
-    total_score += if scores[index + 2] == 'X'
-                     10
-                   else
-                     scores[index + 2].to_i
-                   end
+    total_score += scores[index + 2] == 'X' ? 10 : scores[index + 2].to_i
   end
   total_score
 end
 
 def calc_strike(total_score, frame_count, scores, index)
   total_score += 10
-  total_score += if scores[index + 1] == 'X'
-                   10
-                 else
-                   scores[index + 1].to_i
-                 end
-  total_score += if scores[index + 2] == 'X'
-                   10
-                 else
-                   scores[index + 2].to_i
-                 end
+  total_score += scores[index + 1] == 'X' ? 10 : scores[index + 1].to_i
+  total_score += scores[index + 2] == 'X' ? 10 : scores[index + 2].to_i
   frame_count += 1
   [total_score, frame_count]
 end
 
 def calc_spare(total_score, scores, index)
-  total_score += if scores[index + 1] == 'X'
-                   10
-                 else
-                   scores[index + 1].to_i
-                 end
+  total_score += scores[index + 1] == 'X' ? 10 : scores[index + 1].to_i
   total_score
 end
 
