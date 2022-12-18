@@ -4,12 +4,12 @@
 HORIZONTAL_COUNT = 3
 def main
   files = setup
-  table = []
+  file_list_table = []
   file_index = 0
 
-  table = create_columns(table, files, file_index)
+  file_list_table = create_columns(file_list_table, files, file_index)
 
-  results = table.transpose
+  results = file_list_table.transpose
   results.each { |result| puts result.join(' ') }
 end
 
@@ -20,7 +20,7 @@ def setup
   files = Dir.glob('*').sort
 end
 
-def create_columns(table, files, file_index)
+def create_columns(file_list_table, files, file_index)
   files_count = files.length
   # 横方向に配置する数
   horizontal_count = HORIZONTAL_COUNT
@@ -33,9 +33,9 @@ def create_columns(table, files, file_index)
       column << files[file_index]
       file_index += 1
     end
-    table << column
+    file_list_table << column
   end
-  table
+  file_list_table
 end
 
 main
