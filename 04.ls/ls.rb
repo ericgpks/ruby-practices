@@ -23,7 +23,11 @@ def create_columns(files)
   # 横方向に配置する数
   horizontal_count = HORIZONTAL_COUNT
   # 縦方向に配置する数
-  vertical_count = files_count <= HORIZONTAL_COUNT ? files : (files_count / horizontal_count) + 1
+  if files_count % HORIZONTAL_COUNT == 0
+    vertical_count = files_count / horizontal_count
+  else
+    vertical_count = (files_count / horizontal_count) + 1
+  end
 
   files.each_slice(vertical_count).to_a.map do |column|
     (HORIZONTAL_COUNT - column.count).times do
