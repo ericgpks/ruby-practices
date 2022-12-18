@@ -25,7 +25,11 @@ def create_columns(files)
   # 横方向に配置する数
   horizontal_count = HORIZONTAL_COUNT
   # 縦方向に配置する数
-  vertical_count = (files_count / horizontal_count) + 1
+  if files_count <= HORIZONTAL_COUNT
+    vertical_count = files
+  else
+    vertical_count = (files_count / horizontal_count) + 1
+  end
 
   horizontal_count.times do |_hi|
     column = []
