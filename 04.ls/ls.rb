@@ -17,9 +17,7 @@ private
 
 def setup
   files = []
-  Dir.glob('*').sort.each do |item|
-    files << item
-  end
+  files = Dir.glob('*').sort
 end
 
 def create_columns(table, files, file_index)
