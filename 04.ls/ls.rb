@@ -14,7 +14,7 @@ end
 private
 
 def setup
-  Dir.glob('*').sort
+  Dir.glob('*', sort: true)
 end
 
 def create_columns(files)
