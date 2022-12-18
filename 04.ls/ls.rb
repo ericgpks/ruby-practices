@@ -29,7 +29,7 @@ def create_columns(files)
     vertical_count = (files_count / horizontal_count) + 1
   end
 
-  files.each_slice(vertical_count).to_a.map do |column|
+  files.each_slice(vertical_count) do |column|
     (HORIZONTAL_COUNT - column.count).times do
       column << nil
     end
