@@ -30,9 +30,7 @@ def create_columns(files)
   end
 
   files.each_slice(vertical_count) do |column|
-    (HORIZONTAL_COUNT - column.count).times do
-      column << nil
-    end
+    column << nil while column.count < HORIZONTAL_COUNT
     file_list_table << column
   end
   file_list_table
