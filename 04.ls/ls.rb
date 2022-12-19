@@ -28,11 +28,10 @@ def create_columns(files)
     vertical_count += 1
   end
 
-  files.each_slice(vertical_count) do |column|
+  file_list_table = files.each_slice(vertical_count).map do |column|
     column << nil while column.count < HORIZONTAL_COUNT
-    file_list_table << column
+    column
   end
-  file_list_table
 end
 
 main
