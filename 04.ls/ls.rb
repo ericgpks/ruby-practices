@@ -1,7 +1,9 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+# 横方向に配置する数
 HORIZONTAL_COUNT = 3
+
 def main
   files = setup
 
@@ -20,13 +22,10 @@ end
 def create_columns(files)
   file_list_table = []
   files_count = files.length
-  # 横方向に配置する数
-  horizontal_count = HORIZONTAL_COUNT
   # 縦方向に配置する数
-  if files_count % HORIZONTAL_COUNT == 0
-    vertical_count = files_count / horizontal_count
-  else
-    vertical_count = (files_count / horizontal_count) + 1
+  vertical_count = files_count / HORIZONTAL_COUNT
+  if files_count % HORIZONTAL_COUNT != 0
+    vertical_count += 1
   end
 
   files.each_slice(vertical_count) do |column|
