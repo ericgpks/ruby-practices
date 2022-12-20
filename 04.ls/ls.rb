@@ -24,11 +24,9 @@ def create_columns(files)
   files_count = files.length
   # 縦方向に配置する数
   vertical_count = files_count / HORIZONTAL_COUNT
-  if files_count % HORIZONTAL_COUNT != 0
-    vertical_count += 1
-  end
+  vertical_count += 1 if files_count % HORIZONTAL_COUNT != 0
 
-  file_list_table = files.each_slice(vertical_count).map do |column|
+  files.each_slice(vertical_count).map do |column|
     column << nil while column.count < HORIZONTAL_COUNT
     column
   end
