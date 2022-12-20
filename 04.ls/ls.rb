@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+require 'optparse'
+
 # 横方向に配置する数
 HORIZONTAL_COUNT = 3
 
@@ -16,7 +18,15 @@ end
 private
 
 def setup
-  Dir.glob('*', sort: true)
+  @options = {}
+  OptionParser.new do |o|
+    o.on('-a') { |v| @options[:a] = v }
+  end
+  if ARGV.include?('-a')
+    Dir.glob('*', File::FNM_DOTMATCH, sort: true)
+  else
+    Dir.glob('*', sort: true)
+  end
 end
 
 def create_columns(files)
