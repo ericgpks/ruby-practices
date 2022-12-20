@@ -30,7 +30,6 @@ def setup
 end
 
 def create_columns(files)
-  file_list_table = []
   files_count = files.length
   # 縦方向に配置する数
   vertical_count = files_count / HORIZONTAL_COUNT
