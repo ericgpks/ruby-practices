@@ -18,10 +18,7 @@ end
 private
 
 def setup
-  option = 0
-  if ARGV.include?('-a')
-    option = File::FNM_DOTMATCH
-  end
+  option = ARGV.include?('-a') ? File::FNM_DOTMATCH : 0
   Dir.glob('*', option, sort: true)
 end
 
