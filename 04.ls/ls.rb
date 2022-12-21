@@ -19,7 +19,8 @@ private
 
 def setup
   option = ARGV.include?('-a') ? File::FNM_DOTMATCH : 0
-  Dir.glob('*', option, sort: true)
+  files = Dir.glob('*', option, sort: true)
+  ARGV.include?('-r') ? files.reverse : files
 end
 
 def create_columns(files)
