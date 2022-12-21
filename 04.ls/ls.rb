@@ -18,12 +18,11 @@ end
 private
 
 def setup
-  @options = {}
+  option = 0
   if ARGV.include?('-a')
-    Dir.glob('*', File::FNM_DOTMATCH, sort: true)
-  else
-    Dir.glob('*', sort: true)
+    option = File::FNM_DOTMATCH
   end
+  Dir.glob('*', option, sort: true)
 end
 
 def create_columns(files)
