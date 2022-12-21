@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+require 'optparse'
+
 # 横方向に配置する数
 HORIZONTAL_COUNT = 3
 
@@ -16,11 +18,11 @@ end
 private
 
 def setup
-  Dir.glob('*', sort: true)
+  option = ARGV.include?('-a') ? File::FNM_DOTMATCH : 0
+  Dir.glob('*', option, sort: true)
 end
 
 def create_columns(files)
-  file_list_table = []
   files_count = files.length
   # 縦方向に配置する数
   vertical_count = files_count / HORIZONTAL_COUNT
