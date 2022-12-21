@@ -19,9 +19,6 @@ private
 
 def setup
   @options = {}
-  OptionParser.new do |o|
-    o.on('-a') { |v| @options[:a] = v }
-  end
   if ARGV.include?('-a')
     Dir.glob('*', File::FNM_DOTMATCH, sort: true)
   else
