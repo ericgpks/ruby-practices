@@ -40,7 +40,7 @@ def create_columns(files)
 end
 
 def create_row
-  files = Dir.glob('*', sort: true).to_a
+  files = Dir.glob('*', sort: true)
   files.each do |file|
     row = []
     # ファイルタイプ
