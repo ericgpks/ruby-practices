@@ -40,62 +40,38 @@ def create_columns(files)
 end
 
 def create_row
-  files = Dir.glob('*', sort: true).to_a
+  files = Dir.glob('*', sort: true)
   files.each do |file|
-    row = []
-    # ファイルタイプ
-    row << file_type(file)
-    # パーミション
-    row << permission(file)
-    # ハードリンクの数
-    row << File.stat(file).nlink.to_s.rjust(2)
-    # オーナー名
-    row << File.stat(file).uid.to_s.rjust(4)
-    # グループ名
-    row << File.stat(file).gid.to_s.rjust(4)
-    # バイトサイズ
-    row << File.stat(file).size.to_s.rjust(6)
-    # タイムスタンプ
-    row << File.stat(file).atime.strftime(' %b %d %H:%M')
-    # ファイル名
-    row << " #{file}"
-    puts row.join
+    puts [
+      # ファイルタイプ
+      file_type(file),
+      # パーミション
+      permission(file),
+      # ハードリンクの数
+      File.stat(file).nlink.to_s.rjust(2),
+      # オーナー名
+      File.stat(file).uid.to_s.rjust(4),
+      # グループ名
+      File.stat(file).gid.to_s.rjust(4),
+      # バイトサイズ
+      File.stat(file).size.to_s.rjust(6),
+      # タイムスタンプ
+      File.stat(file).atime.strftime(' %b %d %H:%M'),
+      # ファイル名
+      " #{file}"
+    ].join
   end
 end
 
 def file_type(file)
   # ファイルタイプ
-  case File.ftype(file)
-  when 'file'
-    print '-'
-  when 'directory'
-    print 'd'
-  when 'link'
-    print 'l'
-  else
-    print ''
-  end
+  print({ file: '-', directory: 'd', link: 'l' }[File.ftype(file).to_sym])
 end
 
 def permission(file)
   permissions = File.stat(file).mode.to_s(8)[3..5]
   permissions.split('').each do |permission|
-    case permission
-    when '1'
-      print '--x'
-    when '2'
-      print '-w-'
-    when '3'
-      print '-wx'
-    when '4'
-      print 'r--'
-    when '5'
-      print 'r-x'
-    when '6'
-      print 'rw-'
-    when '7'
-      print 'rwx'
-    end
+    print({ '1': '--x', '2': '-w-', '3': '-wx', '4': 'r--', '5': 'r-x', '6': 'rw-', '7': 'rwx' }[permission.to_sym])
   end
   print ' '
 end
