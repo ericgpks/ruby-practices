@@ -54,7 +54,7 @@ def create_row
       # グループ名
       File.stat(file).gid.to_s.rjust(4),
       # バイトサイズ
-      File.stat(file).size.to_s.rjust(6)
+      File.stat(file).size.to_s.rjust(6),
       # タイムスタンプ
       File.stat(file).atime.strftime(' %b %d %H:%M'),
       # ファイル名
