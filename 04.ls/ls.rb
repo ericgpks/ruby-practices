@@ -65,37 +65,13 @@ end
 
 def file_type(file)
   # ファイルタイプ
-  case File.ftype(file)
-  when 'file'
-    print '-'
-  when 'directory'
-    print 'd'
-  when 'link'
-    print 'l'
-  else
-    print ''
-  end
+  print({ file: '-', directory: 'd', link: 'l' }[File.ftype(file).to_sym])
 end
 
 def permission(file)
   permissions = File.stat(file).mode.to_s(8)[3..5]
   permissions.split('').each do |permission|
-    case permission
-    when '1'
-      print '--x'
-    when '2'
-      print '-w-'
-    when '3'
-      print '-wx'
-    when '4'
-      print 'r--'
-    when '5'
-      print 'r-x'
-    when '6'
-      print 'rw-'
-    when '7'
-      print 'rwx'
-    end
+    print({ '1': '--x', '2': '-w-', '3': '-wx', '4': 'r--', '5': 'r-x', '6': 'rw-', '7': 'rwx'}[permission.to_sym])
   end
   print ' '
 end
