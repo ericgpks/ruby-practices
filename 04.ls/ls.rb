@@ -42,24 +42,24 @@ end
 def create_row
   files = Dir.glob('*', sort: true)
   files.each do |file|
-    row = []
-    # ファイルタイプ
-    row << file_type(file)
-    # パーミション
-    row << permission(file)
-    # ハードリンクの数
-    row << File.stat(file).nlink.to_s.rjust(2)
-    # オーナー名
-    row << File.stat(file).uid.to_s.rjust(4)
-    # グループ名
-    row << File.stat(file).gid.to_s.rjust(4)
-    # バイトサイズ
-    row << File.stat(file).size.to_s.rjust(6)
-    # タイムスタンプ
-    row << File.stat(file).atime.strftime(' %b %d %H:%M')
-    # ファイル名
-    row << " #{file}"
-    puts row.join
+    puts [
+      # ファイルタイプ
+      file_type(file),
+      # パーミション
+      permission(file),
+      # ハードリンクの数
+      File.stat(file).nlink.to_s.rjust(2),
+      # オーナー名
+      File.stat(file).uid.to_s.rjust(4),
+      # グループ名
+      File.stat(file).gid.to_s.rjust(4),
+      # バイトサイズ
+      File.stat(file).size.to_s.rjust(6)
+      # タイムスタンプ
+      File.stat(file).atime.strftime(' %b %d %H:%M'),
+      # ファイル名
+      " #{file}"
+    ].join
   end
 end
 
