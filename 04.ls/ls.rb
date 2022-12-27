@@ -7,11 +7,10 @@ require 'optparse'
 HORIZONTAL_COUNT = 3
 
 def main
-  if ARGV.include?('-l')
-    create_row
+  files = setup
+  if ARGV[0].include?('l')
+    create_row(files)
   else
-    files = setup
-
     file_list_table = create_columns(files)
 
     results = file_list_table.transpose
@@ -22,9 +21,14 @@ end
 private
 
 def setup
-  option = ARGV.include?('-a') ? File::FNM_DOTMATCH : 0
-  files = Dir.glob('*', option, sort: true)
-  ARGV.include?('-r') ? files.reverse : files
+  files = []
+  opts = OptionParser.new do |opts|
+    opts.on('-a') { files = Dir.glob('*', File::FNM_DOTMATCH, sort: true) }
+    opts.on('-r') { files = files.empty? ? Dir.Dir.glob('*', sort: true).reverse : files }
+    opts.on('-l') { files = files.empty? ? Dir.glob('*', sort: true) : files}
+    opts.parse(ARGV)
+  end
+  files
 end
 
 def create_columns(files)
@@ -39,8 +43,7 @@ def create_columns(files)
   end
 end
 
-def create_row
-  files = Dir.glob('*', sort: true)
+def create_row(files)
   files.each do |file|
     puts [
       # ファイルタイプ
