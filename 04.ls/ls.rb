@@ -24,7 +24,7 @@ def setup
   files = []
   opts = OptionParser.new do |opts|
     opts.on('-a') { files = Dir.glob('*', File::FNM_DOTMATCH, sort: true) }
-    opts.on('-r') { files = files.empty? ? Dir.Dir.glob('*', sort: true).reverse : files }
+    opts.on('-r') { files = files.empty? ? Dir.glob('*', sort: true).reverse : files }
     opts.on('-l') { files = files.empty? ? Dir.glob('*', sort: true) : files}
     opts.parse(ARGV)
   end
