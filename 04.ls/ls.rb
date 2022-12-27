@@ -8,6 +8,9 @@ HORIZONTAL_COUNT = 3
 
 def main
   files = setup
+  if ARGV[0].include?('r')
+    files = files.reverse
+  end
   if ARGV[0].include?('l')
     create_row(files)
   else
@@ -24,7 +27,7 @@ def setup
   files = []
   opts = OptionParser.new do |opts|
     opts.on('-a') { files = Dir.glob('*', File::FNM_DOTMATCH, sort: true) }
-    opts.on('-r') { files = files.empty? ? Dir.glob('*', sort: true).reverse : files.reverse }
+    opts.on('-r') { files = files.empty? ? Dir.glob('*', sort: true) : files }
     opts.on('-l') { files = files.empty? ? Dir.glob('*', sort: true) : files}
     opts.parse(ARGV)
   end
