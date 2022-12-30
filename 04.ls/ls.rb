@@ -7,11 +7,15 @@ require 'optparse'
 HORIZONTAL_COUNT = 3
 
 def main
-  files = setup
-  if ARGV[0].include?('r')
+  files = []
+  params = setup
+  files = Dir.glob('*', File::FNM_DOTMATCH, sort: true) if params.include?(:a)
+  if params.include?(:r)
+    files = check_files(files)
     files = files.reverse
   end
-  if ARGV[0].include?('l')
+  if params.include?(:l)
+    files = check_files(files)
     create_row(files)
   else
     file_list_table = create_columns(files)
@@ -24,14 +28,13 @@ end
 private
 
 def setup
-  files = []
-  opts = OptionParser.new do |opts|
-    opts.on('-a') { files = Dir.glob('*', File::FNM_DOTMATCH, sort: true) }
-    opts.on('-r') { files = files.empty? ? Dir.glob('*', sort: true) : files }
-    opts.on('-l') { files = files.empty? ? Dir.glob('*', sort: true) : files}
-    opts.parse(ARGV)
-  end
-  files
+  opt = OptionParser.new
+  params = {}
+  opt.on('-a')
+  opt.on('-r')
+  opt.on('-l')
+  opt.parse(ARGV, into: params)
+  params
 end
 
 def create_columns(files)
@@ -80,6 +83,10 @@ def permission(file)
     print({ '1': '--x', '2': '-w-', '3': '-wx', '4': 'r--', '5': 'r-x', '6': 'rw-', '7': 'rwx' }[permission.to_sym])
   end
   print ' '
+end
+
+def check_files(files)
+  files.empty? ? Dir.glob('*', sort: true) : files
 end
 
 main
