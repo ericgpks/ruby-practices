@@ -78,7 +78,7 @@ def file_type(file)
 end
 
 def permission(file)
-  permissions = File.stat(file).mode.to_s(8)[-3..-1]
+  permissions = File.stat(file).mode.to_s(8)[-3..]
   permissions.split('').each do |permission|
     print({ '1': '--x', '2': '-w-', '3': '-wx', '4': 'r--', '5': 'r-x', '6': 'rw-', '7': 'rwx' }[permission.to_sym])
   end
