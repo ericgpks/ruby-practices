@@ -7,15 +7,12 @@ require 'optparse'
 HORIZONTAL_COUNT = 3
 
 def main
-  files = []
+  option = 0
   params = setup
-  files = Dir.glob('*', File::FNM_DOTMATCH, sort: true) if params.include?(:a)
-  if params.include?(:r)
-    files = check_files(files)
-    files = files.reverse
-  end
+  option = File::FNM_DOTMATCH if params.include?(:a)
+  files = Dir.glob('*', option, sort: true)
+  files = files.reverse if params.include?(:r)
   if params.include?(:l)
-    files = check_files(files)
     create_row(files)
   else
     file_list_table = create_columns(files)
@@ -83,10 +80,6 @@ def permission(file)
     print({ '1': '--x', '2': '-w-', '3': '-wx', '4': 'r--', '5': 'r-x', '6': 'rw-', '7': 'rwx' }[permission.to_sym])
   end
   print ' '
-end
-
-def check_files(files)
-  files.empty? ? Dir.glob('*', sort: true) : files
 end
 
 main
