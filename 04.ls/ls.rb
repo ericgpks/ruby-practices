@@ -7,11 +7,14 @@ require 'optparse'
 HORIZONTAL_COUNT = 3
 
 def main
-  if ARGV.include?('-l')
-    create_row
+  option = 0
+  params = setup
+  option = File::FNM_DOTMATCH if params.include?(:a)
+  files = Dir.glob('*', option, sort: true)
+  files = files.reverse if params.include?(:r)
+  if params.include?(:l)
+    create_row(files)
   else
-    files = setup
-
     file_list_table = create_columns(files)
 
     results = file_list_table.transpose
@@ -22,9 +25,13 @@ end
 private
 
 def setup
-  option = ARGV.include?('-a') ? File::FNM_DOTMATCH : 0
-  files = Dir.glob('*', option, sort: true)
-  ARGV.include?('-r') ? files.reverse : files
+  opt = OptionParser.new
+  params = {}
+  opt.on('-a')
+  opt.on('-r')
+  opt.on('-l')
+  opt.parse(ARGV, into: params)
+  params
 end
 
 def create_columns(files)
@@ -39,8 +46,7 @@ def create_columns(files)
   end
 end
 
-def create_row
-  files = Dir.glob('*', sort: true)
+def create_row(files)
   files.each do |file|
     puts [
       # ファイルタイプ
@@ -69,7 +75,7 @@ def file_type(file)
 end
 
 def permission(file)
-  permissions = File.stat(file).mode.to_s(8)[3..5]
+  permissions = File.stat(file).mode.to_s(8)[-3..]
   permissions.split('').each do |permission|
     print({ '1': '--x', '2': '-w-', '3': '-wx', '4': 'r--', '5': 'r-x', '6': 'rw-', '7': 'rwx' }[permission.to_sym])
   end
