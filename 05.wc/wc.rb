@@ -30,9 +30,17 @@ end
 
 def setup_files
   files = []
-  files << ARGV unless ARGV.empty?
-  files << ARGF.gets.chomp unless ARGF.gets.empty?
-  files = Dir.glob('*', sort: true) if files.empty?
+  # 引数
+  files = ARGF.argv unless ARGF.argv.empty?
+  # 標準入力
+  files << ARGF.gets.chomp if files.empty?
+  # パイプ
+  if File.pipe?($stdin)
+    files.each do |file_content|
+      File.open('ls_file', 'w', 0o755) { |f| f.print file_content.to_s }
+    end
+    files = ['ls_file']
+  end
   files
 end
 
