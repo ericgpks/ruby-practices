@@ -4,13 +4,16 @@
 require 'optparse'
 
 def main
-  files = ARGV
-  files = Dir.glob('*', sort: true) if files.empty?
   params = setup
+  files = setup_files
   files.each do |file|
-    print " #{count_row(file)} " if params.include?(:l) || params.empty?
-    print " #{count_word(file)} " if params.include?(:w) || params.empty?
-    print " #{count_bite(file)} " if params.include?(:c) || params.empty?
+    if params.empty?
+      print " #{count_row(file)}  #{count_word(file)}  #{count_bite(file)} "
+    else
+      print " #{count_row(file)} " if params.include?(:l)
+      print " #{count_word(file)} " if params.include?(:w)
+      print " #{count_bite(file)} " if params.include?(:c)
+    end
     print " #{file}\n"
   end
 end
@@ -23,6 +26,14 @@ def setup
   opt.on('-c')
   opt.parse!(ARGV, into: params)
   params
+end
+
+def setup_files
+  files = []
+  files << ARGV unless ARGV.empty?
+  files << ARGF.gets.chomp unless ARGF.gets.empty?
+  files = Dir.glob('*', sort: true) if files.empty?
+  files
 end
 
 def count_bite(file)
