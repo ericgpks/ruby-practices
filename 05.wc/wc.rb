@@ -5,17 +5,22 @@ require 'optparse'
 
 def main
   params = setup
-  files = setup_files
-  files.each do |file|
-    if params.empty?
-      print " #{count_row(file)}  #{count_word(file)}  #{count_bite(file)} "
-    else
-      print " #{count_row(file)} " if params.include?(:l)
-      print " #{count_word(file)} " if params.include?(:w)
-      print " #{count_bite(file)} " if params.include?(:c)
-    end
-    print " #{file}\n"
+  files = []
+  # 引数
+  unless ARGF.argv.empty?
+    files = ARGF.argv
+    show_result(files, params)
   end
+  # パイプ
+  if File.pipe?($stdin)
+    files = readlines(&:chomp)
+    show_pipe_result(files)
+  end
+  return unless files.empty?
+
+  # 標準入力
+  files << ARGF.gets.chomp
+  show_result(files, params)
 end
 
 def setup
@@ -28,20 +33,26 @@ def setup
   params
 end
 
-def setup_files
-  files = []
-  # 引数
-  files = ARGF.argv unless ARGF.argv.empty?
-  # 標準入力
-  files << ARGF.gets.chomp if files.empty?
-  # パイプ
-  if File.pipe?($stdin)
-    files.each do |file_content|
-      File.open('ls_file', 'w', 0o755) { |f| f.print file_content.to_s }
+def show_result(files, params)
+  files.each do |file|
+    if params.empty?
+      print " #{count_row(file)}  #{count_word(file)}  #{count_bite(file)} "
+    else
+      print " #{count_row(file)} " if params.include?(:l)
+      print " #{count_word(file)} " if params.include?(:w)
+      print " #{count_bite(file)} " if params.include?(:c)
     end
-    files = ['ls_file']
+    print " #{file}\n"
   end
-  files
+end
+
+def show_pipe_result(files)
+  # 行数
+  print " #{files.length} "
+  # 単語数
+  print " #{files.to_s.gsub(/\s+/, "\n").count("\n")} "
+  # サイズ
+  print " #{files.to_s.bytesize} "
 end
 
 def count_bite(file)
