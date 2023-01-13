@@ -13,14 +13,9 @@ def main
   end
   # パイプ
   if File.pipe?($stdin)
-    files = readlines(&:chomp)
+    files = $stdin.read(&:chomp)
     show_pipe_result(files)
   end
-  return unless files.empty?
-
-  # 標準入力
-  files << ARGF.gets.chomp
-  show_result(files, params)
 end
 
 def setup
@@ -35,12 +30,13 @@ end
 
 def show_result(files, params)
   files.each do |file|
+    content = File.readlines(file)
     if params.empty?
-      print " #{count_row(file)}  #{count_word(file)}  #{count_bite(file)} "
+      print " #{count_row(content)}  #{count_word(content)}  #{count_bite(content)} "
     else
-      print " #{count_row(file)} " if params.include?(:l)
-      print " #{count_word(file)} " if params.include?(:w)
-      print " #{count_bite(file)} " if params.include?(:c)
+      print " #{count_row(content)} " if params.include?(:l)
+      print " #{count_word(content)} " if params.include?(:w)
+      print " #{count_bite(content)} " if params.include?(:c)
     end
     print " #{file}\n"
   end
@@ -55,22 +51,16 @@ def show_pipe_result(files)
   print " #{files.to_s.bytesize} "
 end
 
-def count_bite(file)
-  file.size
+def count_byte(content)
+  content.to_s.size
 end
 
-def count_row(file)
-  File.open(file).readlines.count
+def count_row(content)
+  content.length
 end
 
-def count_word(file)
-  new_file = File.read(file).gsub(/\s+/, "\n")
-  space_count = new_file.count("\n")
-  if new_file[0] == "\n"
-    space_count - 1
-  else
-    space_count
-  end
+def count_word(content)
+  content.join.split(/\s+/).count
 end
 
 main
