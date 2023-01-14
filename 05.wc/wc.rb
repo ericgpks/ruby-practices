@@ -6,19 +6,12 @@ require 'optparse'
 def main
   params = setup
   # 引数
-  unless ARGF.argv.empty?
-    files = ARGF.argv
-    files.each do |file|
-      content = File.read(file)
-      show_result(content, params)
-      print " #{file}\n"
-    end
-  end
+  pattern_params(params) unless ARGF.argv.empty?
   # パイプ
-  if File.pipe?($stdin)
-    content = $stdin.read(&:chomp)
-    show_result(content, params)
-  end
+  return unless File.pipe?($stdin)
+
+  content = $stdin.read(&:chomp)
+  show_result(content, params)
 end
 
 def setup
@@ -31,14 +24,36 @@ def setup
   params
 end
 
-def show_result(content, params)
-  if params.empty?
-    print " #{count_row(content)}  #{count_word(content)}  #{count_byte(content)} "
-  else
-    print " #{count_row(content)} " if params.include?(:l)
-    print " #{count_word(content)} " if params.include?(:w)
-    print " #{count_byte(content)} " if params.include?(:c)
+def pattern_params(params)
+  total_row = 0
+  total_byte = 0
+  total_word = 0
+  files = ARGF.argv
+  files.each do |file|
+    content = File.read(file)
+    row, byte, word = show_result(content, params)
+    total_row += row
+    total_byte += byte
+    total_word += word
+    print " #{file}\n"
   end
+  return unless files.count > 1
+
+  print " #{total_row}  #{total_word}  #{total_byte}  total"
+end
+
+def show_result(content, params)
+  row = count_row(content)
+  word = count_word(content)
+  byte = count_byte(content)
+  if params.empty?
+    print " #{row}  #{word}  #{byte} "
+  else
+    print " #{row} " if params.include?(:l)
+    print " #{word} " if params.include?(:w)
+    print " #{byte} " if params.include?(:c)
+  end
+  [row, word, byte]
 end
 
 def count_byte(content)
