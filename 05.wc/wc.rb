@@ -5,16 +5,19 @@ require 'optparse'
 
 def main
   params = setup
-  files = []
   # 引数
   unless ARGF.argv.empty?
     files = ARGF.argv
-    show_result(files, params)
+    files.each do |file|
+      content = File.read(file)
+      show_result(content, params)
+      print " #{file}\n"
+    end
   end
   # パイプ
   if File.pipe?($stdin)
-    files = $stdin.read(&:chomp)
-    show_pipe_result(files)
+    content = $stdin.read(&:chomp)
+    show_result(content, params)
   end
 end
 
@@ -28,39 +31,26 @@ def setup
   params
 end
 
-def show_result(files, params)
-  files.each do |file|
-    content = File.readlines(file)
-    if params.empty?
-      print " #{count_row(content)}  #{count_word(content)}  #{count_byte(content)} "
-    else
-      print " #{count_row(content)} " if params.include?(:l)
-      print " #{count_word(content)} " if params.include?(:w)
-      print " #{count_byte(content)} " if params.include?(:c)
-    end
-    print " #{file}\n"
+def show_result(content, params)
+  if params.empty?
+    print " #{count_row(content)}  #{count_word(content)}  #{count_byte(content)} "
+  else
+    print " #{count_row(content)} " if params.include?(:l)
+    print " #{count_word(content)} " if params.include?(:w)
+    print " #{count_byte(content)} " if params.include?(:c)
   end
 end
 
-def show_pipe_result(files)
-  # 行数
-  print " #{files.length} "
-  # 単語数
-  print " #{files.to_s.gsub(/\s+/, "\n").count("\n")} "
-  # サイズ
-  print " #{files.to_s.bytesize} "
-end
-
 def count_byte(content)
-  content.to_s.size
+  content.bytesize
 end
 
 def count_row(content)
-  content.length
+  content.lines.count
 end
 
 def count_word(content)
-  content.join.split(/\s+/).count
+  content.to_s.gsub(/\s+/, "\n").count("\n")
 end
 
 main
