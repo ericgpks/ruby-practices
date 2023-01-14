@@ -32,11 +32,11 @@ def show_result(files, params)
   files.each do |file|
     content = File.readlines(file)
     if params.empty?
-      print " #{count_row(content)}  #{count_word(content)}  #{count_bite(content)} "
+      print " #{count_row(content)}  #{count_word(content)}  #{count_byte(content)} "
     else
       print " #{count_row(content)} " if params.include?(:l)
       print " #{count_word(content)} " if params.include?(:w)
-      print " #{count_bite(content)} " if params.include?(:c)
+      print " #{count_byte(content)} " if params.include?(:c)
     end
     print " #{file}\n"
   end
