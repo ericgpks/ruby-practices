@@ -15,7 +15,8 @@ def main
   return unless File.pipe?($stdin)
 
   content = $stdin.read(&:chomp)
-  show_result(content, params)
+  row, word, byte = calc(content)
+  show_result(row, word, byte, params)
 end
 
 def setup
@@ -35,7 +36,8 @@ def show_result_for_params(files, params)
 
   files.each do |file|
     content = File.read(file)
-    row, word, byte = show_result(content, params)
+    row, word, byte = calc(content)
+    show_result(row, word, byte, params)
     total_row += row
     total_byte += byte
     total_word += word
@@ -46,8 +48,7 @@ def show_result_for_params(files, params)
   print " #{total_row}  #{total_word}  #{total_byte}  total"
 end
 
-def show_result(content, params)
-  row, word, byte = calc(content)
+def show_result(row, word, byte, params)
   if params.empty?
     print " #{row}  #{word}  #{byte} "
   else
@@ -55,7 +56,6 @@ def show_result(content, params)
     print " #{word} " if params.include?(:w)
     print " #{byte} " if params.include?(:c)
   end
-  [row, word, byte]
 end
 
 def calc(content)
