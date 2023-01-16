@@ -35,7 +35,7 @@ def show_result_for_params(files, params)
 
   files.each do |file|
     content = File.read(file)
-    row, byte, word = show_result(content, params)
+    row, word, byte = show_result(content, params)
     total_row += row
     total_byte += byte
     total_word += word
@@ -47,9 +47,7 @@ def show_result_for_params(files, params)
 end
 
 def show_result(content, params)
-  row = count_row(content)
-  word = count_word(content)
-  byte = count_byte(content)
+  row, word, byte = calc(content)
   if params.empty?
     print " #{row}  #{word}  #{byte} "
   else
@@ -60,16 +58,11 @@ def show_result(content, params)
   [row, word, byte]
 end
 
-def count_byte(content)
-  content.bytesize
-end
-
-def count_row(content)
-  content.lines.count
-end
-
-def count_word(content)
-  content.to_s.gsub(/\s+/, "\n").count("\n")
+def calc(content)
+  row_count = content.lines.count
+  byte_count = content.bytesize
+  word_count = content.to_s.gsub(/\s+/, "\n").count("\n")
+  [row_count, word_count, byte_count]
 end
 
 main
