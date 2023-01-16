@@ -6,7 +6,11 @@ require 'optparse'
 def main
   params = setup
   # 引数
-  pattern_params(params) unless ARGF.argv.empty?
+  unless ARGF.argv.empty?
+    files = ARGF.argv
+    show_result_for_params(files, params)
+  end
+
   # パイプ
   return unless File.pipe?($stdin)
 
@@ -24,11 +28,11 @@ def setup
   params
 end
 
-def pattern_params(params)
+def show_result_for_params(files, params)
   total_row = 0
   total_byte = 0
   total_word = 0
-  files = ARGF.argv
+
   files.each do |file|
     content = File.read(file)
     row, byte, word = show_result(content, params)
