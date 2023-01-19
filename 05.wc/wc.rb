@@ -8,7 +8,7 @@ def main
   # 引数
   unless ARGF.argv.empty?
     files = ARGF.argv
-    get_files_and_print_results_from_argument(files, params)
+    main_on_argument_pattern(files, params)
   end
 
   # パイプ
@@ -16,7 +16,7 @@ def main
 
   content = $stdin.read(&:chomp)
   row, word, byte = calc(content)
-  print_one_file_result(row, word, byte, params)
+  print_content(row, word, byte, params)
 end
 
 def setup
@@ -29,7 +29,7 @@ def setup
   params
 end
 
-def get_files_and_print_results_from_argument(files, params)
+def main_on_argument_pattern(files, params)
   total_row = 0
   total_byte = 0
   total_word = 0
@@ -37,7 +37,7 @@ def get_files_and_print_results_from_argument(files, params)
   files.each do |file|
     content = File.read(file)
     row, word, byte = calc(content)
-    print_one_file_result(row, word, byte, params)
+    print_content(row, word, byte, params)
     total_row += row
     total_byte += byte
     total_word += word
@@ -45,10 +45,10 @@ def get_files_and_print_results_from_argument(files, params)
   end
   return unless files.count > 1
 
-  print_total_result(total_row, total_word, total_byte)
+  print_total_line(total_row, total_word, total_byte)
 end
 
-def print_one_file_result(row, word, byte, params)
+def print_content(row, word, byte, params)
   if params.empty?
     print " #{row}  #{word}  #{byte} "
   else
@@ -58,7 +58,7 @@ def print_one_file_result(row, word, byte, params)
   end
 end
 
-def print_total_result(total_row, total_word, total_byte)
+def print_total_line(total_row, total_word, total_byte)
   print " #{total_row}  #{total_word}  #{total_byte}  total"
 end
 
